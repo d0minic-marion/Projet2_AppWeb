@@ -1,0 +1,23 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#grad)" />
+
+  <path
+    d="M84 46C80 40 73 36 64 36C50 36 40 47 40 64C40 81 50 92 64 92C73 92 80 88 84 82"
+    stroke="white"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <g transform="translate(82,22)">
+    <rect x="-8" y="-8" width="24" height="24" rx="8" fill="rgba(255,255,255,0.22)" />
+    <path d="M4 0H-4M0 -4V4" stroke="white" stroke-width="2.4" stroke-linecap="round" />
+  </g>
+
+  <defs>
+    <linearGradient id="grad" x1="8" y1="8" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4C6EF5"/>
+      <stop offset="100%" stop-color="#B197FC"/>
+    </linearGradient>
+  </defs>
+</svg>

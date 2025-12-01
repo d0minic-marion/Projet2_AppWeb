@@ -18,8 +18,18 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await loginWithEmail(email, pwd);
-      navigate("/"); // rediriger selon type de compte
+      const cred = await loginWithEmail(email, pwd);
+      const user = cred.user;
+
+      const token = await user.getIdTokenResult();
+      const role = token.claims.role || "unknown";
+
+      console.log(
+        `%c[AUTH] Login email/pwd → ${user.email} | Role: ${role} | UID: ${user.uid}`,
+        "color: #4ade80; font-weight: bold;"
+      );
+
+      navigate("/"); // rediriger selon type de compte (implimenter plustard)
     } catch (err) {
       console.error(err);
       setError("Connexion échouée. Vérifiez vos informations.");
@@ -32,7 +42,17 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      await loginWithGoogle();
+      const cred = await loginWithGoogle();
+      const user = cred.user;
+
+      const token = await user.getIdTokenResult();
+      const role = token.claims.role || "unknown";
+
+      console.log(
+        `%c[AUTH] Login Google → ${user.email} | Role: ${role} | UID: ${user.uid}`,
+        "color: #4ade80; font-weight: bold;"
+      );
+
       navigate("/");
     } catch (err) {
       console.error(err);

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../2_context/AuthContext";
 import { fetchUserRole } from "../../5_services/authService";
 
+
 const FORMULAS = [
   "a² + b² = c²",
   "E = mc²",
@@ -18,7 +19,7 @@ const FORMULAS = [
   "d/dx (x³) = 3x²",
   "ln(e) = 1",
   "|x| ≥ 0",
-  "x₁, x₂ = (-b ± √Δ)/2a",
+  "x₁,x₂ = (-b ± √Δ)/2a",
   "∀ε > 0, ∃δ > 0",
 ];
 
@@ -30,6 +31,7 @@ function FallingFormula({ slot }) {
   const [formula, setFormula] = useState(getRandomFormula());
   const [duration] = useState(() => 5 + Math.random() * 4);
   const [delay] = useState(() => Math.random() * 3);
+
   return (
     <div
       className={`formula formula-slot-${slot}`}
@@ -54,8 +56,10 @@ function MathRain() {
   );
 }
 
+
 export default function LoginPage() {
   const { loginWithEmail, loginWithGoogle } = useAuth();
+
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [error, setError] = useState("");
@@ -75,11 +79,12 @@ export default function LoginPage() {
       const role = await fetchUserRole(user);
 
       console.log(
-        `%c[AUTH] Login email/pwd → ${user.email} | Role: ${role} | UID: ${user.uid}`,
-        "color: #4ade80; font-weight: bold;"
+        `%c[AUTH] Login email → ${user.email} (role: ${role})`,
+        "color:#4ade80;font-weight:bold;"
       );
 
-      navigate("/");
+      if (role === "admin") navigate("/admin");
+      else navigate("/teacher");
     } catch (err) {
       console.error(err);
       setError("Connexion échouée. Vérifiez vos informations.");
@@ -88,6 +93,7 @@ export default function LoginPage() {
     }
   };
 
+  
   const onGoogle = async () => {
     setError("");
     setLoading(true);
@@ -98,11 +104,12 @@ export default function LoginPage() {
       const role = await fetchUserRole(user);
 
       console.log(
-        `%c[AUTH] Login Google → ${user.email} | Role: ${role} | UID: ${user.uid}`,
-        "color: #4ade80; font-weight: bold;"
+        `%c[AUTH] Login Google → ${user.email} (role: ${role})`,
+        "color:#4ade80;font-weight:bold;"
       );
 
-      navigate("/");
+      if (role === "admin") navigate("/admin");
+      else navigate("/teacher");
     } catch (err) {
       console.error(err);
       setError("Connexion Google échouée.");
@@ -111,9 +118,11 @@ export default function LoginPage() {
     }
   };
 
+ 
   return (
     <div className="login-page">
       <MathRain />
+
       <div className="login-card">
         <div className="login-header">
           <a href="/" className="login-logo">
@@ -149,11 +158,7 @@ export default function LoginPage() {
 
           {error && <div className="login-error">{error}</div>}
 
-          <button
-            type="submit"
-            className="login-btn-primary"
-            disabled={loading}
-          >
+          <button type="submit" className="login-btn-primary" disabled={loading}>
             {loading ? "Connexion..." : "Se connecter"}
           </button>
         </form>

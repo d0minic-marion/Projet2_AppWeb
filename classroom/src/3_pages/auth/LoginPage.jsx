@@ -2,6 +2,57 @@ import React, { useState } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../2_context/AuthContext";
+import { fetchUserRole } from "../../5_services/authService";
+
+const FORMULAS = [
+  "a² + b² = c²",
+  "E = mc²",
+  "f(x) = ax² + bx + c",
+  "limₙ→∞ 1/n = 0",
+  "∫ x² dx",
+  "P(A ∩ B)",
+  "Σᵢ xᵢ / n",
+  "e^{iπ} + 1 = 0",
+  "sin²x + cos²x = 1",
+  "√(a² + b²)",
+  "d/dx (x³) = 3x²",
+  "ln(e) = 1",
+  "|x| ≥ 0",
+  "x₁, x₂ = (-b ± √Δ)/2a",
+  "∀ε > 0, ∃δ > 0",
+];
+
+function getRandomFormula() {
+  return FORMULAS[Math.floor(Math.random() * FORMULAS.length)];
+}
+
+function FallingFormula({ slot }) {
+  const [formula, setFormula] = useState(getRandomFormula());
+  const [duration] = useState(() => 5 + Math.random() * 4);
+  const [delay] = useState(() => Math.random() * 3);
+  return (
+    <div
+      className={`formula formula-slot-${slot}`}
+      style={{
+        animationDuration: `${duration}s`,
+        animationDelay: `${delay}s`,
+      }}
+      onAnimationIteration={() => setFormula(getRandomFormula())}
+    >
+      {formula}
+    </div>
+  );
+}
+
+function MathRain() {
+  return (
+    <div className="math-rain">
+      <FallingFormula slot={0} />
+      <FallingFormula slot={1} />
+      <FallingFormula slot={2} />
+    </div>
+  );
+}
 
 export default function LoginPage() {
   const { loginWithEmail, loginWithGoogle } = useAuth();
@@ -21,15 +72,14 @@ export default function LoginPage() {
       const cred = await loginWithEmail(email, pwd);
       const user = cred.user;
 
-      const token = await user.getIdTokenResult();
-      const role = token.claims.role || "unknown";
+      const role = await fetchUserRole(user);
 
       console.log(
         `%c[AUTH] Login email/pwd → ${user.email} | Role: ${role} | UID: ${user.uid}`,
         "color: #4ade80; font-weight: bold;"
       );
 
-      navigate("/"); // rediriger selon type de compte (implimenter plustard)
+      navigate("/");
     } catch (err) {
       console.error(err);
       setError("Connexion échouée. Vérifiez vos informations.");
@@ -45,8 +95,7 @@ export default function LoginPage() {
       const cred = await loginWithGoogle();
       const user = cred.user;
 
-      const token = await user.getIdTokenResult();
-      const role = token.claims.role || "unknown";
+      const role = await fetchUserRole(user);
 
       console.log(
         `%c[AUTH] Login Google → ${user.email} | Role: ${role} | UID: ${user.uid}`,
@@ -64,6 +113,7 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
+      <MathRain />
       <div className="login-card">
         <div className="login-header">
           <a href="/" className="login-logo">

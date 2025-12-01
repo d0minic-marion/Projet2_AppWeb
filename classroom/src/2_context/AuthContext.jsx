@@ -1,38 +1,44 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth";
-import { auth, googleProvider } from "../firebase.js";
+  loginWithEmail as loginWithEmailService,
+  loginWithGoogle as loginWithGoogleService,
+  logout as logoutService,
+  subscribeToAuthChanges,
+} from "../5_services/authService";
 
 const AuthContext = createContext(null);
+
+function FullScreenLoader() {
+  return (
+    <div className="app-loader">
+      <div className="app-loader-card">
+        <div className="app-loader-spinner"></div>
+        <p>Chargement de classroom…</p>
+      </div>
+    </div>
+  );
+}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsub = subscribeToAuthChanges((firebaseUser) => {
       setUser(firebaseUser || null);
       setLoading(false);
     });
+
     return () => unsub();
   }, []);
 
-  const loginWithEmail = (email, password) => {
-    return signInWithEmailAndPassword(auth, email.trim(), password);
-  };
+  const loginWithEmail = (email, password) =>
+    loginWithEmailService(email, password);
 
-  const loginWithGoogle = () => {
-    return signInWithPopup(auth, googleProvider);
-  };
+  const loginWithGoogle = () => loginWithGoogleService();
 
-  const logout = () => {
-    return signOut(auth);
-  };
+  const logout = () => logoutService();
 
   const value = {
     user,
@@ -46,17 +52,6 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider value={value}>
       {loading ? <FullScreenLoader /> : children}
     </AuthContext.Provider>
-  );
-}
-
-function FullScreenLoader() {
-  return (
-    <div className="app-loader">
-      <div className="app-loader-card">
-        <div className="app-loader-spinner"></div>
-        <p>Chargement de classroom…</p>
-      </div>
-    </div>
   );
 }
 

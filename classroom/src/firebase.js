@@ -10,13 +10,14 @@ const firebaseConfig = {
   storageBucket: "ex01-ee413.firebasestorage.app",
   messagingSenderId: "1076967840090",
   appId: "1:1076967840090:web:a7c8a3c972350bb53abb63",
-  measurementId: "G-6WLKJ9BKWD"
+  measurementId: "G-6WLKJ9BKWD",
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-const db = getFirestore(app);
-const storage = getStorage(app);
 
-export { app, auth, provider, db, storage };
+export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
+export const db = getFirestore(app);
+export const storage = getStorage(app);
+
+export default app;

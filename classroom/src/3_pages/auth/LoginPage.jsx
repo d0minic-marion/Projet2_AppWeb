@@ -1,11 +1,109 @@
-import React from "react";
+import React, { useState } from "react";
+import "./login.css";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../2_context/AuthContext";
 
-function LoginPage() {
+export default function LoginPage() {
+  const { loginWithEmail, loginWithGoogle } = useAuth();
+  const [email, setEmail] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      await loginWithEmail(email, pwd);
+      navigate("/"); // rediriger selon type de compte
+    } catch (err) {
+      console.error(err);
+      setError("Connexion échouée. Vérifiez vos informations.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onGoogle = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      await loginWithGoogle();
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      setError("Connexion Google échouée.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div>
-      <h1>Login Page</h1>
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-header">
+          <a href="/" className="login-logo">
+            <img src="/classroom-logo.svg" alt="classroom logo" />
+            <span>classroom</span>
+          </a>
+          <h1>Connexion</h1>
+          <p>Connectez-vous pour gérer vos plans de cours.</p>
+        </div>
+
+        <form className="login-form" onSubmit={onSubmit}>
+          <label>
+            Courriel
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="votre.email@site.com"
+              required
+            />
+          </label>
+
+          <label>
+            Mot de passe
+            <input
+              type="password"
+              value={pwd}
+              onChange={(e) => setPwd(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
+          </label>
+
+          {error && <div className="login-error">{error}</div>}
+
+          <button
+            type="submit"
+            className="login-btn-primary"
+            disabled={loading}
+          >
+            {loading ? "Connexion..." : "Se connecter"}
+          </button>
+        </form>
+
+        <div className="login-divider">
+          <span></span>
+          <p>ou</p>
+          <span></span>
+        </div>
+
+        <button
+          type="button"
+          className="login-btn-google"
+          onClick={onGoogle}
+          disabled={loading}
+        >
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" />
+          <span>Continuer avec Google</span>
+        </button>
+      </div>
     </div>
   );
 }
-
-export default LoginPage;

@@ -1,0 +1,161 @@
+/* === CONTENEUR PRINCIPAL (basé sur page-container) === */
+.admin-page {
+  padding-top: 80px !important;
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, #4c6ef5 0, #b197fc 55%, #eef2ff 100%);
+  padding: 24px;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+/* === TITRE PRINCIPAL === */
+.admin-title {
+  text-align: center;
+  color: #f8fafc;
+  font-size: clamp(1.9rem, 3vw, 2.4rem);
+  margin-bottom: 30px;
+}
+
+/* === CARDS (basé sur feature-card) === */
+.admin-card {
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.16);
+  margin-bottom: 30px;
+
+}
+
+/* === LIST ITEMS === */
+.admin-item {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: #0f172a;
+  transition: 0.2s;
+}
+
+.admin-item:hover {
+  background: #f1f5f9;
+  transform: translateX(2px);
+}
+
+.admin-item.active {
+  background: #eef2ff;
+  border-left: 4px solid #4c6ef5;
+}
+
+/* === BOUTONS === */
+button {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+button.primary {
+  background-color: #4c6ef5;
+  color: white;
+}
+
+button.primary:hover {
+  background-color: #3b5bdb;
+}
+
+button.danger {
+  background: #e03131;
+  color: white;
+}
+
+button.danger:hover {
+  background: #c92a2a;
+}
+
+button.warning {
+  background: #fab005;
+  color: white;
+}
+
+button.warning:hover {
+  background: #f59f00;
+}
+
+button.secondary {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+button.secondary:hover {
+  background: #cbd5e1;
+}
+
+/* === FORMULAIRE === */
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+  width: 175px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  margin-top: 8px;
+  margin-right: 2px;
+  font-size: 0.9rem;
+}
+
+.admin-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* 3 colonnes */
+  gap: 5px;
+  margin-top: 40px;
+}
+
+
+.inputs-admin{
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.inputs-admin button {
+  height: 42px;     
+  margin-top: 8px;  
+  border-radius: 10px;
+}
+
+
+.admin-form textarea {
+  min-height: 80px;
+}
+
+/* === MODAL === */
+.admin-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.admin-card.big {
+  width: 300px;
+}
+
+/* Close button */
+.close {
+  float: right;
+  background: #64748b;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 9px;
+  font-size: 1rem;
+}
+
+.close:hover {
+  background: #475569;
+}

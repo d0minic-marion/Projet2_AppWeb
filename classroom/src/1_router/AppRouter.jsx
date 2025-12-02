@@ -5,6 +5,9 @@ import WelcomePage from "../3_pages/info/WelcomePage.jsx";
 import LoginPage from "../3_pages/auth/LoginPage.jsx";
 import FeaturesPage from "../3_pages/info/FeaturesPage.jsx";
 import AboutPage from "../3_pages/info/AboutPage.jsx";
+import AdminDashboard from "../3_pages/admin/AdminDashboard.jsx";
+import TeacherDashboard from "../3_pages/teacher/TeacherDashboard.jsx";
+
 
 export default function AppRouter() {
   return (
@@ -14,6 +17,10 @@ export default function AppRouter() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/features" element={<FeaturesPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/admin" element={<AdminDashboard/>}/>
+        <Route path="/teacher" element={<TeacherDashboard/>}/>
+
+
       </Routes>
     </BrowserRouter>
   );

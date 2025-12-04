@@ -1,6 +1,4 @@
-// src/4_components/admin/firebase/firestoreAdmin.js
-
-import { db, storage } from "../../../firebase";
+import { db, storage } from "../../firebase";
 import {
   collection,
   addDoc,
@@ -14,9 +12,6 @@ import {
 } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 
-/* ----------------------
-   FORMULAIRES
------------------------ */
 export async function getFormulaires() {
   const snap = await getDocs(collection(db, "formulaires"));
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -43,9 +38,6 @@ export async function toggleActivation(id, actif, nbQuestions) {
   await updateDoc(doc(db, "formulaires", id), { actif: !actif });
 }
 
-/* ----------------------
-   QUESTIONS
------------------------ */
 export async function addQuestion(formId, question) {
   const refForm = doc(db, "formulaires", formId);
   const snap = await getDoc(refForm);
@@ -66,9 +58,6 @@ export async function removeQuestion(formId, questionId) {
   });
 }
 
-/* ----------------------
-   PLANS DE COURS
------------------------ */
 export async function getPlans() {
   const snap = await getDocs(collection(db, "plans"));
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));

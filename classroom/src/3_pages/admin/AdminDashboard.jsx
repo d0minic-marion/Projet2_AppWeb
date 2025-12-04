@@ -1,39 +1,45 @@
-// src/3_pages/admin/AdminDashboard.jsx
-
 import "./AdminDashboard.css";
 import { useEffect, useState } from "react";
 
-
-
-// Components (déjà faits par toi)
 import Navbar from "../../4_components/common/Navbar"
 
 import FormEditor from "./FormEditPage";
 import FormList from "./FormListPage";
 import PlanDetails from "./PlanDetailPage";
 import PlanList from "./PlanEditPage";
+import QuestionEditor from "./QuestionEditor";
 
- 
-// Firebase services
+import {
+  getFormulaires,
+  createFormulaire,
+  deleteFormulaire,
+  toggleActivation,
+  addQuestion,
+  removeQuestion,
+  getPlans,
+  updatePlanStatus,
+} from "./firebaseAdmin";
+
 
 export default function AdminDashboard() {
-  // ---------------- STATE ----------------
   const [forms, setForms] = useState([]);
   const [selectedForm, setSelectedForm] = useState(null);
 
   const [plans, setPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(null);
 
-  // ---------------- LOAD DATA ----------------
   useEffect(() => {
-    loadForms(),
-    loadPlans()
+    loadForms();
+    loadPlans();
   }, []);
 
   async function loadForms() {
     const data = await getFormulaires();
     setForms(data);
-    setSelectedForm(data[0] || null);
+    setSelectedForm((prev) => {
+      const currentSelected = data.find(f => f.id === prev?.id);
+      return currentSelected || data[0] || null;
+    });
   }
 
   async function loadPlans() {
@@ -41,7 +47,6 @@ export default function AdminDashboard() {
     setPlans(data);
   }
 
-  // ---------------- FORM ACTIONS ----------------
   async function handleCreateForm(form) {
     await createFormulaire(form.nom, form.session);
     loadForms();
@@ -61,7 +66,6 @@ export default function AdminDashboard() {
     }
   }
 
-  // ---------------- QUESTION ACTIONS ----------------
   async function handleAddQuestion(question) {
     await addQuestion(selectedForm.id, question);
     loadForms();
@@ -72,15 +76,14 @@ export default function AdminDashboard() {
     loadForms();
   }
 
-  // ---------------- PLAN ACTIONS ----------------
   async function handleApprove(planId) {
-    await updatePlanStatus(planId, "Approuvé");
+    await updatePlanStatus(planId, "APPROVED");
     loadPlans();
     setSelectedPlan(null);
   }
 
   async function handleCorrection(planId, comment) {
-    await updatePlanStatus(planId, "Correction demandée", comment);
+    await updatePlanStatus(planId, "NEEDS_CHANGES", comment);
     loadPlans();
     setSelectedPlan(null);
   }
@@ -94,10 +97,6 @@ export default function AdminDashboard() {
 
   <div className="admin-grid-3">
 
-    {/* Colonne 1 → Formulaires */}
-
-
-    {/* Colonne 2 → Création formulaire */}
     <div className="admin-section">
       <FormEditor onCreate={handleCreateForm} />
     </div>
@@ -113,16 +112,12 @@ export default function AdminDashboard() {
     </div>
 
 
-
-
-    {/* Colonne 3 → Plans soumis */}
     <div className="admin-section">
       <PlanList plans={plans} onSelect={setSelectedPlan} />
     </div>
 
   </div>
 
-  {/* En dessous (pas dans la grille) */}
   {selectedForm && (
     <div className="admin-section" style={{ marginTop: "20px" }}>
       <QuestionEditor
@@ -133,7 +128,6 @@ export default function AdminDashboard() {
     </div>
   )}
 
-  {/* Détails du plan (popup ou card) */}
   {selectedPlan && (
     <PlanDetails
       plan={selectedPlan}

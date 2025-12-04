@@ -1,4 +1,3 @@
-// 4_components/admin/PlanDetails.jsx
 import { useState } from "react";
 
 export default function PlanDetails({ plan, onApprove, onCorrection, onClose }) {

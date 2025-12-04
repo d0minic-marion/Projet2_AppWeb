@@ -1,4 +1,3 @@
-// 4_components/admin/PlanList.jsx
 export default function PlanList({ plans, onSelect }) {
   return (
     <div className="admin-card">

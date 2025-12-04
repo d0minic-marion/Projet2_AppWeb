@@ -1,4 +1,3 @@
-/* === CONTENEUR PRINCIPAL (basé sur page-container) === */
 .admin-page {
   padding-top: 80px !important;
   min-height: 100vh;
@@ -7,7 +6,6 @@
   font-family: "Poppins", system-ui, sans-serif;
 }
 
-/* === TITRE PRINCIPAL === */
 .admin-title {
   text-align: center;
   color: #f8fafc;
@@ -15,7 +13,6 @@
   margin-bottom: 30px;
 }
 
-/* === CARDS (basé sur feature-card) === */
 .admin-card {
   background: rgba(255, 255, 255, 0.97);
   border-radius: 18px;
@@ -25,7 +22,6 @@
 
 }
 
-/* === LIST ITEMS === */
 .admin-item {
   padding: 12px 10px;
   border-bottom: 1px solid #e2e8f0;
@@ -47,7 +43,7 @@
   border-left: 4px solid #4c6ef5;
 }
 
-/* === BOUTONS === */
+
 button {
   border: none;
   padding: 8px 14px;
@@ -93,7 +89,6 @@ button.secondary:hover {
   background: #cbd5e1;
 }
 
-/* === FORMULAIRE === */
 .admin-form input,
 .admin-form select,
 .admin-form textarea {
@@ -108,7 +103,7 @@ button.secondary:hover {
 
 .admin-grid-3 {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* 3 colonnes */
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 5px;
   margin-top: 40px;
 }
@@ -131,7 +126,6 @@ button.secondary:hover {
   min-height: 80px;
 }
 
-/* === MODAL === */
 .admin-modal {
   position: fixed;
   inset: 0;
@@ -146,7 +140,6 @@ button.secondary:hover {
   width: 300px;
 }
 
-/* Close button */
 .close {
   float: right;
   background: #64748b;

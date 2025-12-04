@@ -1,4 +1,3 @@
-// 4_components/admin/FormEditor.jsx
 import { useState } from "react";
 
 export default function FormEditor({ onCreate }) {

@@ -177,17 +177,21 @@ export default function TeacherDashboard() {
          return alert(`Ce plan contient moins de 10 questions (${currentPlan.answers.length}). Il ne peut pas être soumis.`);
     }
 
+    setIsSaving(true);
+
     try {
-        await submitPlan(currentPlan.id, currentPlan.answers);
+        await submitPlan(currentPlan.id, currentPlan.answers, currentPlan);
 
         const updatedPlan = { ...currentPlan, status: PLAN_STATUS.SUBMITTED };
         setCurrentPlan(updatedPlan);
         setPlans(plans.map(p => p.id === currentPlan.id ? updatedPlan : p));
 
-        alert("Plan soumis avec succès !");
+        alert("Plan soumis et PDF généré avec succès !");
     } catch (err) {
         console.error("Erreur soumission:", err);
-        alert("Échec de la soumission.");
+        alert("Échec de la soumission ou de la génération PDF.");
+    } finally {
+        setIsSaving(false);
     }
   };
 
@@ -308,7 +312,9 @@ export default function TeacherDashboard() {
                         onClick={submitPlanForApproval} 
                         disabled={currentPlan.status !== PLAN_STATUS.DRAFT && currentPlan.status !== PLAN_STATUS.NEEDS_CHANGES}
                     >
-                        {currentPlan.status === PLAN_STATUS.SUBMITTED ? "En attente" : currentPlan.status === PLAN_STATUS.APPROVED ? "Validé" : "Soumettre"}
+                        {isSaving ? "Génération PDF..." : 
+                         currentPlan.status === PLAN_STATUS.SUBMITTED ? "En attente" : 
+                         currentPlan.status === PLAN_STATUS.APPROVED ? "Validé" : "Soumettre"}
                     </button>
                 </div>
               </div>
@@ -319,7 +325,7 @@ export default function TeacherDashboard() {
                   <p>{currentPlan.commentaireAdmin}</p>
                 </div>
               )}
-
+              
               <div className="content-scroll-area">
                 {currentPlan.questions?.map((q, i) => (
                   <div key={i} className="question-card">

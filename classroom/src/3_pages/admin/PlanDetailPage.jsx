@@ -44,6 +44,7 @@ export default function PlanDetails({ plan, onApprove, onCorrection, onClose }) 
         </ul>
 
         <div style={{marginTop:'20px', display:'flex', flexDirection:'column', gap:'10px'}}>
+            
             {plan.status !== "APPROVED" && (
                 <button className="primary" onClick={() => onApprove(plan.id)}>
                 ✅ Approuver le plan
@@ -65,6 +66,16 @@ export default function PlanDetails({ plan, onApprove, onCorrection, onClose }) 
                 ⚠️ Demander corrections
                 </button>
             </div>
+
+            {plan.pdfUrl && (
+              <button 
+                className="secondary" 
+                onClick={() => window.open(plan.pdfUrl, '_blank')}
+                style={{marginTop: '10px', background: '#e2e8f0', color: '#334155'}}
+              >
+                📄 Télécharger le PDF officiel
+              </button>
+            )}
         </div>
       </div>
     </div>

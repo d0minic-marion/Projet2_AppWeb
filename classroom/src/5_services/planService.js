@@ -1,6 +1,16 @@
 import { db } from "../firebase";
-import { collection, addDoc, query, where, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { 
+  collection, 
+  addDoc, 
+  query, 
+  where, 
+  getDocs, 
+  doc, 
+  updateDoc, 
+  deleteDoc 
+} from "firebase/firestore";
 import { PLAN_STATUS } from "../6_utils/constant";
+import { generateAndUploadPDF } from "./pdfService";
 
 export async function createPlan({ teacherId, teacherName, formId, questions, title, session }) {
   
@@ -42,17 +52,23 @@ export async function updatePlanAnswers(planId, answers) {
   await updateDoc(planRef, {
     answers: answers,
     updatedAt: Date.now(),
-    status: PLAN_STATUS.DRAFT, 
   });
 }
 
-export async function submitPlan(planId, answers) {
+export async function submitPlan(planId, answers, planDetails) {
+  
+  const fullPlanData = { ...planDetails, answers }; 
+  const pdfUrl = await generateAndUploadPDF(fullPlanData);
+
   const planRef = doc(db, "plans", planId);
   await updateDoc(planRef, {
     status: PLAN_STATUS.SUBMITTED,
     answers: answers, 
     updatedAt: Date.now(),
+    pdfUrl: pdfUrl
   });
+
+  return pdfUrl;
 }
 
 export async function deletePlan(planId) {

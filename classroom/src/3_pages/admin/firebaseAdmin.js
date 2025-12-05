@@ -7,8 +7,6 @@ import {
   updateDoc,
   deleteDoc,
   doc,
-  query,
-  where,
 } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 
@@ -63,9 +61,9 @@ export async function getPlans() {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-export async function updatePlanStatus(planId, statut, commentaire = "") {
+export async function updatePlanStatus(planId, status, commentaire = "") {
   await updateDoc(doc(db, "plans", planId), {
-    statut,
+    status: status,
     commentaireAdmin: commentaire,
   });
 }

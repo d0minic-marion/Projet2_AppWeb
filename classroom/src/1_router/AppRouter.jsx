@@ -19,24 +19,9 @@ export default function AppRouter() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/features" element={<FeaturesPage />} />
         <Route path="/about" element={<AboutPage />} />
-        
-        <Route 
-          path="/admin" 
-          element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          } 
-        />
+        <Route path="/admin" element={<AdminDashboard/>}/>
+        <Route path="/teacher" element={<TeacherDashboard/>}/>
 
-        <Route 
-          path="/teacher" 
-          element={
-            <ProtectedRoute allowedRoles={['teacher']}>
-              <TeacherDashboard />
-            </ProtectedRoute>
-          } 
-        />
 
       </Routes>
     </BrowserRouter>

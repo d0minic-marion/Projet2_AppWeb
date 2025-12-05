@@ -163,6 +163,16 @@ export default function LoginPage() {
           </button>
         </form>
 
+        <div style={{textAlign: 'center', marginTop: '15px', fontSize: '0.9rem'}}>
+            <span style={{opacity: 0.7}}>Pas de compte ? </span>
+            <span 
+                style={{color: '#38bdf8', cursor: 'pointer', fontWeight: '600'}}
+                onClick={() => navigate("/register")}
+            >
+                Inscrivez-vous
+            </span>
+        </div>
+
         <div className="login-divider">
           <span></span>
           <p>ou</p>

@@ -2,25 +2,10 @@ import React, { useState } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../2_context/AuthContext";
-import { fetchUserRole } from "../../5_services/authService";
-
 
 const FORMULAS = [
-  "a² + b² = c²",
-  "E = mc²",
-  "f(x) = ax² + bx + c",
-  "limₙ→∞ 1/n = 0",
-  "∫ x² dx",
-  "P(A ∩ B)",
-  "Σᵢ xᵢ / n",
-  "e^{iπ} + 1 = 0",
-  "sin²x + cos²x = 1",
-  "√(a² + b²)",
-  "d/dx (x³) = 3x²",
-  "ln(e) = 1",
-  "|x| ≥ 0",
-  "x₁,x₂ = (-b ± √Δ)/2a",
-  "∀ε > 0, ∃δ > 0",
+  "a² + b² = c²", "E = mc²", "f(x) = ax² + bx + c",
+  "limₙ→∞ 1/n = 0", "∫ x² dx", "P(A ∩ B)", "Σᵢ xᵢ / n"
 ];
 
 function getRandomFormula() {
@@ -56,12 +41,14 @@ function MathRain() {
   );
 }
 
-
-export default function LoginPage() {
-  const { loginWithEmail, loginWithGoogle } = useAuth();
-
+export default function RegisterPage() {
+  const { registerWithEmail } = useAuth();
+  
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
+  
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -70,55 +57,33 @@ export default function LoginPage() {
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (pwd !== confirmPwd) {
+      return setError("Les mots de passe ne correspondent pas.");
+    }
+
+    if (pwd.length < 6) {
+        return setError("Le mot de passe doit contenir au moins 6 caractères.");
+    }
+
     setLoading(true);
 
     try {
-      const cred = await loginWithEmail(email, pwd);
-      const user = cred.user;
-
-      const role = await fetchUserRole(user);
-
-      console.log(
-        `%c[AUTH] Login email → ${user.email} (role: ${role})`,
-        "color:#4ade80;font-weight:bold;"
-      );
-
-      if (role === "admin") navigate("/admin");
-      else navigate("/teacher");
+      await registerWithEmail(email, pwd, name);
+      
+      navigate("/teacher");
     } catch (err) {
       console.error(err);
-      setError("Connexion échouée. Vérifiez vos informations.");
+      if (err.code === 'auth/email-already-in-use') {
+        setError("Cet email est déjà utilisé.");
+      } else {
+        setError("Inscription échouée. Veuillez réessayer.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  
-  const onGoogle = async () => {
-    setError("");
-    setLoading(true);
-    try {
-      const cred = await loginWithGoogle();
-      const user = cred.user;
-
-      const role = await fetchUserRole(user);
-
-      console.log(
-        `%c[AUTH] Login Google → ${user.email} (role: ${role})`,
-        "color:#4ade80;font-weight:bold;"
-      );
-
-      if (role === "admin") navigate("/admin");
-      else navigate("/teacher");
-    } catch (err) {
-      console.error(err);
-      setError("Connexion Google échouée.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
- 
   return (
     <div className="login-page">
       <MathRain />
@@ -129,18 +94,29 @@ export default function LoginPage() {
             <img src="/classroom-logo.svg" alt="classroom logo" />
             <span>classroom</span>
           </a>
-          <h1>Connexion</h1>
-          <p>Connectez-vous pour gérer vos plans de cours.</p>
+          <h1>Inscription</h1>
+          <p>Créez votre compte enseignant.</p>
         </div>
 
         <form className="login-form" onSubmit={onSubmit}>
+          <label>
+            Nom complet
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ex: Jean Dupont"
+              required
+            />
+          </label>
+
           <label>
             Courriel
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="votre.email@site.com"
+              placeholder="votre.email@ecole.com"
               required
             />
           </label>
@@ -156,38 +132,33 @@ export default function LoginPage() {
             />
           </label>
 
+          <label>
+            Confirmer mot de passe
+            <input
+              type="password"
+              value={confirmPwd}
+              onChange={(e) => setConfirmPwd(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
+          </label>
+
           {error && <div className="login-error">{error}</div>}
 
           <button type="submit" className="login-btn-primary" disabled={loading}>
-            {loading ? "Connexion..." : "Se connecter"}
+            {loading ? "Création..." : "S'inscrire"}
           </button>
         </form>
 
         <div style={{textAlign: 'center', marginTop: '15px', fontSize: '0.9rem'}}>
-            <span style={{opacity: 0.7}}>Pas de compte ? </span>
+            <span style={{opacity: 0.7}}>Déjà un compte ? </span>
             <span 
                 style={{color: '#38bdf8', cursor: 'pointer', fontWeight: '600'}}
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/login")}
             >
-                Inscrivez-vous
+                Connectez-vous
             </span>
         </div>
-
-        <div className="login-divider">
-          <span></span>
-          <p>ou</p>
-          <span></span>
-        </div>
-
-        <button
-          type="button"
-          className="login-btn-google"
-          onClick={onGoogle}
-          disabled={loading}
-        >
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" />
-          <span>Continuer avec Google</span>
-        </button>
       </div>
     </div>
   );

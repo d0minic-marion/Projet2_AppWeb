@@ -5,50 +5,67 @@ export default function PlanDetails({ plan, onApprove, onCorrection, onClose }) 
 
   return (
     <div className="admin-modal">
-      <div className="admin-card big">
-        <button className="close" onClick={onClose}>×</button>
+      <div className="admin-card big" style={{ width: '600px', maxWidth: '95vw', maxHeight: '90vh', overflowY: 'auto' }}>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+            <h2>Détails du plan</h2>
+            <button className="close" onClick={onClose}>×</button>
+        </div>
 
-        <h2>Détails du plan</h2>
+        <p><strong>Titre :</strong> {plan.title}</p>
+        <p><strong>Enseignant :</strong> {plan.teacherName}</p>
+        <p><strong>Session :</strong> {plan.session}</p>
 
-        <p><strong>Cours :</strong> {plan.cours}</p>
-        <p><strong>Enseignant :</strong> {plan.enseignant}</p>
+        <hr style={{margin:'15px 0', border:'none', borderTop:'1px solid #e2e8f0'}} />
 
-        <h3>Contenu</h3>
-        <ul>
-          {Object.entries(plan.reponses).map(([q, r]) => (
-            <li key={q}><strong>{q} :</strong> {r}</li>
-          ))}
-        </ul>
-
-        <h3>Validation IA</h3>
-        <ul>
-          {plan.ia?.map((v, i) => (
-            <li key={i}>
-              <strong>{v.status}</strong> — {v.message}
+        <h3>Contenu du plan</h3>
+        <ul style={{ paddingLeft: '20px', display:'flex', flexDirection:'column', gap:'15px' }}>
+          {plan.answers && plan.answers.map((item, index) => (
+            <li key={index} style={{ listStyle: 'none' }}>
+              <div style={{fontWeight: 'bold', marginBottom:'4px', color:'#1e293b'}}>
+                {index + 1}. {item.questionText}
+              </div>
+              <div style={{
+                  background: '#f8fafc', 
+                  padding: '10px', 
+                  borderRadius: '6px', 
+                  border: '1px solid #e2e8f0',
+                  whiteSpace: 'pre-wrap'
+              }}>
+                {item.answerText || <em style={{opacity:0.5}}>Pas de réponse</em>}
+              </div>
+              
+              {item.aiFeedback && (
+                  <div style={{fontSize:'0.85rem', marginTop:'5px', color:'#6366f1'}}>
+                      🤖 <strong>IA:</strong> {item.aiFeedback}
+                  </div>
+              )}
             </li>
           ))}
         </ul>
 
-        <button className="primary" onClick={() => onApprove(plan.id)}>
-          Approuver
-        </button>
+        <div style={{marginTop:'20px', display:'flex', flexDirection:'column', gap:'10px'}}>
+            {plan.status !== "APPROVED" && (
+                <button className="primary" onClick={() => onApprove(plan.id)}>
+                ✅ Approuver le plan
+                </button>
+            )}
 
-        <textarea
-          placeholder="Commentaire pour correction…"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-
-        <button
-          className="warning"
-          onClick={() => onCorrection(plan.id, comment)}
-        >
-          Demander corrections
-        </button>
-
-        <button className="secondary" onClick={() => window.open(plan.pdfUrl)}>
-          Télécharger PDF
-        </button>
+            <div style={{display:'flex', gap:'5px'}}>
+                <textarea
+                placeholder="Commentaire pour correction…"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                style={{flexGrow: 1}}
+                />
+                <button
+                className="warning"
+                onClick={() => onCorrection(plan.id, comment)}
+                disabled={!comment.trim()}
+                >
+                ⚠️ Demander corrections
+                </button>
+            </div>
+        </div>
       </div>
     </div>
   );
